@@ -1,6 +1,6 @@
 FROM python:3.8-alpine
 
-ENV PATH = "scripts/${PATH}"
+ENV PATH="/scripts:${PATH}"
 
 COPY ./django_project/requirements.txt ./django_project/requirements.txt
 RUN apk add --update --no-cache --virtual .tmp
@@ -19,7 +19,11 @@ COPY ./scripts /scripts
 
 RUN chmod +x /scripts/*
 
+#RUN mkdir -p /vol/web/media
+#RUN mkdir -p /vol/web/static
+
 RUN mkdir -p /vol/web/media
+COPY ./django_project/media/. /vol/web/media
 RUN mkdir -p /vol/web/static
 
 RUN adduser -D user
@@ -27,7 +31,7 @@ RUN chown -R user:user /vol
 RUN chmod -R 755 /vol/web
 USER user
 
-CMD ['entrypoint.sh']
+CMD ["entrypoint.sh"]
 
 
 
